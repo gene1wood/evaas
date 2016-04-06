@@ -1,0 +1,250 @@
+---
+swagger: "2.0"
+info:
+  version: "2016-04-06T15:48:38Z"
+  title: "EVaaS"
+host: "kbx4zz7mrc.execute-api.us-west-2.amazonaws.com"
+basePath: "/prod"
+schemes:
+- "https"
+paths:
+  /rps:
+    put:
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "RpsRequest"
+        required: true
+        schema:
+          $ref: "#/definitions/RpsRequest"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Rps200Response"
+        400:
+          description: "400 response"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "500 response"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+          ServerError :.*:
+            statusCode: "500"
+            responseTemplates:
+              application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"errors\"\
+                \ : [\n    {\n      \"title\" : $input.json('$.errorType'),\n    \
+                \  \"detail\" : $input.json('$.errorMessage')\n    }\n  ]\n}"
+          ClientError :.*:
+            statusCode: "400"
+            responseTemplates:
+              application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"errors\"\
+                \ : [\n    {\n      \"title\" : $input.json('$.errorType'),\n    \
+                \  \"detail\" : $input.json('$.errorMessage')\n    }\n  ]\n}"
+        requestTemplates:
+          application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"body\" :\
+            \ $input.json('$'),\n  \"resource_path\" : \"$context.resourcePath\",\n\
+            \  \"http_method\" : \"$context.httpMethod\",\n  \"X-Forwarded-For\":\
+            \ \"$input.params().header.get('X-Forwarded-For')\",\n  \"stage\": \"\
+            $context.stage\",\n  \"api_id\": \"$context.apiId\"\n}"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        httpMethod: "POST"
+        type: "aws"
+  /tokens/{token}:
+    get:
+      consumes:
+      - "application/json"
+      produces:
+      - "text/html"
+      parameters:
+      - name: "token"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Empty"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseTemplates:
+              text/html: "#set($inputRoot = $input.path('$')) \n$inputRoot"
+        requestTemplates:
+          application/json: "{\n  \"resource_path\" : \"$context.resourcePath\",\n\
+            \  \"http_method\" : \"$context.httpMethod\",\n  \"X-Forwarded-For\":\
+            \ \"$input.params().header.get('X-Forwarded-For')\",\n  \"token\": \"\
+            $input.params('token')\"\n}"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        httpMethod: "POST"
+        type: "aws"
+  /users:
+    get:
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Api-Key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "email"
+        in: "query"
+        required: false
+        type: "string"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Users200Response"
+        400:
+          description: "400 response"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "500 response"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+          ServerError :.*:
+            statusCode: "500"
+            responseTemplates:
+              application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"errors\"\
+                \ : [\n    {\n      \"title\" : $input.json('$.errorType'),\n    \
+                \  \"detail\" : $input.json('$.errorMessage')\n    }\n  ]\n}"
+          ClientError :.*:
+            statusCode: "400"
+            responseTemplates:
+              application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"errors\"\
+                \ : [\n    {\n      \"title\" : $input.json('$.errorType'),\n    \
+                \  \"detail\" : $input.json('$.errorMessage')\n    }\n  ]\n}"
+        requestTemplates:
+          application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"resource_path\"\
+            \ : \"$context.resourcePath\",\n  \"http_method\" : \"$context.httpMethod\"\
+            ,\n  \"X-Forwarded-For\": \"$input.params().header.get('X-Forwarded-For')\"\
+            ,\n  \"stage\": \"$context.stage\",\n  \"api_id\": \"$context.apiId\"\
+            ,\n  \"email\": \"$input.params('email')\",\n  \"api_key\": \"$input.params('Api-Key')\"\
+            \n}"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        httpMethod: "POST"
+        requestParameters:
+          integration.request.header.Api-Key: "method.request.header.Api-Key"
+          integration.request.querystring.email: "method.request.querystring.email"
+        type: "aws"
+    put:
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "Api-Key"
+        in: "header"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "UsersRequest"
+        required: true
+        schema:
+          $ref: "#/definitions/UsersRequest"
+      responses:
+        200:
+          description: "200 response"
+          schema:
+            $ref: "#/definitions/Users200Response"
+        400:
+          description: "400 response"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        500:
+          description: "500 response"
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+          ServerError :.*:
+            statusCode: "500"
+            responseTemplates:
+              application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"errors\"\
+                \ : [\n    {\n      \"title\" : $input.json('$.errorType'),\n    \
+                \  \"detail\" : $input.json('$.errorMessage')\n    }\n  ]\n}"
+          ClientError :.*:
+            statusCode: "400"
+            responseTemplates:
+              application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"errors\"\
+                \ : [\n    {\n      \"title\" : $input.json('$.errorType'),\n    \
+                \  \"detail\" : $input.json('$.errorMessage')\n    }\n  ]\n}"
+        requestTemplates:
+          application/json: "#set($inputRoot = $input.path('$'))\n{\n  \"body\" :\
+            \ $input.json('$'),\n  \"resource_path\" : \"$context.resourcePath\",\n\
+            \  \"http_method\" : \"$context.httpMethod\",\n  \"X-Forwarded-For\":\
+            \ \"$input.params().header.get('X-Forwarded-For')\",\n  \"stage\": \"\
+            $context.stage\",\n  \"api_id\": \"$context.apiId\",\n  \"api_key\": \"\
+            $input.params('Api-Key')\"\n}"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        httpMethod: "POST"
+        requestParameters:
+          integration.request.header.Api-Key: "method.request.header.Api-Key"
+        type: "aws"
+definitions:
+  Empty:
+    type: "object"
+  Users200Response:
+    type: "object"
+    required:
+    - "status"
+    properties:
+      status:
+        type: "string"
+  UsersRequest:
+    type: "object"
+    required:
+    - "email"
+    properties:
+      email:
+        type: "string"
+  RpsRequest:
+    type: "object"
+    required:
+    - "email"
+    properties:
+      email:
+        type: "string"
+      service_name:
+        type: "string"
+  Rps200Response:
+    type: "object"
+    required:
+    - "api_key"
+    properties:
+      api_key:
+        type: "string"
+  ErrorResponse:
+    type: "object"
+    required:
+    - "errors"
+    properties:
+      errors:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            detail:
+              type: "string"
+            title:
+              type: "string"
