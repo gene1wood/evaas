@@ -5,6 +5,8 @@ from botocore.vendored import requests
 import StringIO
 import random
 from zipfile import ZipFile
+import time
+import yaml
 
 
 class ApiGatewayBuilder():
@@ -229,13 +231,23 @@ class ApiGatewayBuilder():
             Timeout=10,
         )
 
-    @staticmethod
-    def import_api_swagger():
+    def import_api_swagger(self):
         client = boto3.client('apigateway')
         with open('evaas_swagger.yaml', 'r') as f:
-            response = client.import_rest_api(
-                body=f
-            )
+            swagger = yaml.load(f)
+        for path in swagger['paths'].keys():
+            for method in swagger['paths'][path].keys():
+                if ('x-amazon-apigateway-integration' in swagger['paths'][path][method] and 'uri' in
+                        swagger['paths'][path][method]['x-amazon-apigateway-integration']):
+                    swagger['paths'][path][method]['x-amazon-apigateway-integration']['uri'] = (
+                        swagger['paths'][path][method]['x-amazon-apigateway-integration']['uri'].replace(
+                            '123456789012', self.account_id))
+
+        # Requires botocore 1.4.9
+        # https://github.com/boto/botocore/commit/d400d47bebead69279b200bcd62fd7d7f55cfaf1
+        response = client.import_rest_api(
+            body=yaml.dump(swagger)
+        )
         return response['id']
 
     def grant_lambda_permissions(self, api_id):
@@ -267,9 +279,11 @@ class ApiGatewayBuilder():
         )
 
     def build(self):
-        # self.create_dynamo_db()
-        # role_arn self.create_lambda_execution_iam_role()
-        role_arn = 'arn:aws:iam::656532927350:role/evaas_lambda_role'
+        self.create_dynamo_db()
+
+        role_arn = self.create_lambda_execution_iam_role()
+        print("Sleeping while IAM Role is created")
+        time.sleep(10)
         self.create_lambda_function(role_arn)
 
         api_id = self.import_api_swagger()

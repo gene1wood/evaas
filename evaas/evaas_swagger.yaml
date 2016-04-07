@@ -55,7 +55,7 @@ paths:
             \  \"http_method\" : \"$context.httpMethod\",\n  \"X-Forwarded-For\":\
             \ \"$input.params().header.get('X-Forwarded-For')\",\n  \"stage\": \"\
             $context.stage\",\n  \"api_id\": \"$context.apiId\"\n}"
-        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:123456789012:function:EVaaS/invocations"
         httpMethod: "POST"
         type: "aws"
   /tokens/{token}:
@@ -85,7 +85,7 @@ paths:
             \  \"http_method\" : \"$context.httpMethod\",\n  \"X-Forwarded-For\":\
             \ \"$input.params().header.get('X-Forwarded-For')\",\n  \"token\": \"\
             $input.params('token')\"\n}"
-        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:123456789012:function:EVaaS/invocations"
         httpMethod: "POST"
         type: "aws"
   /users:
@@ -139,7 +139,7 @@ paths:
             ,\n  \"stage\": \"$context.stage\",\n  \"api_id\": \"$context.apiId\"\
             ,\n  \"email\": \"$input.params('email')\",\n  \"api_key\": \"$input.params('Api-Key')\"\
             \n}"
-        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:123456789012:function:EVaaS/invocations"
         httpMethod: "POST"
         requestParameters:
           integration.request.header.Api-Key: "method.request.header.Api-Key"
@@ -196,7 +196,7 @@ paths:
             \ \"$input.params().header.get('X-Forwarded-For')\",\n  \"stage\": \"\
             $context.stage\",\n  \"api_id\": \"$context.apiId\",\n  \"api_key\": \"\
             $input.params('Api-Key')\"\n}"
-        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:656532927350:function:EVaaS/invocations"
+        uri: "arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:123456789012:function:EVaaS/invocations"
         httpMethod: "POST"
         requestParameters:
           integration.request.header.Api-Key: "method.request.header.Api-Key"

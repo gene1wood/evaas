@@ -13,7 +13,7 @@ specifically API Gateway, Lambda, DynamoDB and Simple Email Service.
 
 ```
 rpemail=rp@example.com
-useremail=user+1@exmaple.com
+useremail=user+1@example.com
 urlencodeduseremail=user%2B1%40example.com
 servicename="My RP"
 apiid=skacymyqag
@@ -51,7 +51,7 @@ Which results in the translated payload to lambda of
 
 ```
 {
-  "body" : {"email": "user+1@exmaple.com"},
+  "body" : {"email": "user+1@example.com"},
   "resource_path" : "/users",
   "http_method" : "PUT",
   "X-Forwarded-For": "203.0.113.100",
@@ -93,7 +93,7 @@ Which results in the translated payload to lambda of
   "X-Forwarded-For": "203.0.113.100",
   "stage": "prod",
   "api_id": "ab1cd23e45",
-  "email": "user+1@exmaple.com",
+  "email": "user+1@example.com",
   "api_key": "gccIPN8bgVAP_xHzZ6RCk1_4fAzho6TQOKJoEB-0l4c="
 }
 ```
